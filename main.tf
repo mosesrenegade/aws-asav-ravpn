@@ -7,7 +7,7 @@ terraform {
 provider "aws" {
   region                  = "us-west-1"
   version                 = "~> 2.36.0"
-  shared_credentials_file = "/home/sec588/.aws/credentials"
+  shared_credentials_file = "/home/user/.aws/credentials"
   profile                 = "default"
 }
 
@@ -38,7 +38,7 @@ resource "random_pet" "this" {
 
 locals {
   cisco_asav_name        = "asav-${random_pet.this.id}" 
-  my_public_ip           = "96.71.19.172/32"
+  my_public_ip           = "1.2.3.4/32"
   ssh_key_name           = var.key_name
   asav_public_facing_ip1 = "172.16.0.10"
   asav_public_facing_ip2 = "172.16.2.10"
@@ -277,7 +277,7 @@ resource "aws_eip" "cisco_asav_elastic_public_ip2" {
 resource "aws_instance" "cisco_asav1" {
   # This AMI is only valid in us-west-1 region, with this specific instance type
   ami           = "ami-09041ae21d57240c4"
-  instance_type = "c3.large"
+  instance_type = "c4.large"
   key_name      = "cisco_asa_key"
 
   network_interface {
@@ -293,7 +293,7 @@ resource "aws_instance" "cisco_asav1" {
   user_data = file("day0-config.txt")
 
   tags = {
-    Name = "asav"
+    Name = "asav-${random_pet.this.id}-1"
   }
 }
 
@@ -301,7 +301,7 @@ resource "aws_instance" "cisco_asav1" {
 resource "aws_instance" "cisco_asav2" {
   # This AMI is only valid in us-west-1 region, with this specific instance type
   ami           = "ami-09041ae21d57240c4"
-  instance_type = "c3.large"
+  instance_type = "c4.large"
   key_name      = "cisco_asa_key"
 
   network_interface {
@@ -317,7 +317,7 @@ resource "aws_instance" "cisco_asav2" {
   user_data = file("day0-config.txt")
 
   tags = {
-    Name = "asav"
+    Name = "asav-${random_pet.this.id}-2"
   }
 }
 
